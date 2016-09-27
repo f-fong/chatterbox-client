@@ -16,7 +16,8 @@
         if (newSearch !== '' & newSearch !== '?') {
           newSearch += '&';
         }
-        newSearch += 'username=' + (prompt('What is your name?') || 'anonymous');
+        var name = (prompt('What is your name?') || 'anonymous');
+        newSearch += 'username=' + name;
         window.location.search = newSearch;
       }
     </script>
@@ -24,9 +25,13 @@
     <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
     <script>
-      $('button .refresh').on('click', function() {
-        console.log('h$$$$$$$$$$$$');
+    $(document).ready(function() {
+      $('.refresh').on('click', function() {
+        app.fetch();
+        waitAndPopulate();
       });
+    });
+
     </script>
   </head>
   <body>
@@ -34,6 +39,15 @@
     <button class="refresh">
     refresh
     </button>
+    <div class="messagezone">
+      
+      message:<input type="text" id="message"></input>
+      room:<input type="text" id="room" value="default"></input>
+      <button id="submitmsg">submit</button>
+
+    </div>
+
+    </form>
       <h1>chatterbox</h1>
       <div id="roomSelect"></div>
       <!-- Your HTML goes here! -->
