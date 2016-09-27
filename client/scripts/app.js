@@ -56,9 +56,30 @@ app.clearMessages = function() {
 };
 
 app.renderMessage = function(message) {
-  var validText = '';
+  console.log('incoming: ', message.text);
+  var validText = JSON.stringify(message.text);
+  if (validText) {
+    console.log(validText);
 
-  $('#chats').append('<div type="text">' + JSON.stringify(message.text) + '</div>');
+    validText = validText.replace(/</g, '\<');
+    validText = validText.replace(/>/g, '\<');
+    validText = validText.replace(/[/]/g, '\/');
+    // validText = validText.replace(/[\\]/g, //);
+    // validText = validText.replace(/["]/g, 'quote');
+    validText = validText.replace(/[(]/g, 'openparen');
+    validText = validText.replace(/[)]/g, 'closeparen');
+
+
+
+  } else {
+    validText = 'undefined';
+  }
+  if (validText[0] === '"') { validText = validText.substring(1, validText.length - 1); }
+  //console.log(message.createdAt, validText);
+
+  console.log('outgoing: ', validText);
+
+  $('#chats').append('<div type="text">' + validText + '</div>');
 };
 
 app.renderRoom = function(room) {
@@ -70,17 +91,25 @@ app.renderRoom = function(room) {
 app.fetch();
 
 
-setTimeout(function() {
-
+var populate = function() {
   app.data.results.forEach(function(val, key, col) {
-    //console.log(val.text);
-    console.log('rooooooooom:', val.roomname);
     app.rooms[val.roomname] = val.roomname;
-    //app.rooms[val.roomname] = true;
     app.renderMessage(val);
   });
+};
+
+
+setTimeout(function() {
+
+  populate();
 
 }, 4000);
+
+
+
+
+//check();
+
 
 // app.data.results.forEach(function(val, key, col) {
 
@@ -95,8 +124,6 @@ setTimeout(function() {
 // app.data.results.forEach(function(val, key, col) {
 //   app.renderMessage(app.data.results[key]);
 // });
-
-
 
 
 
