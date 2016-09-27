@@ -58,28 +58,14 @@ app.clearMessages = function() {
 app.renderMessage = function(message) {
   console.log('incoming: ', message.text);
   var validText = JSON.stringify(message.text);
-  if (validText) {
-    console.log(validText);
-
-    validText = validText.replace(/</g, '\<');
-    validText = validText.replace(/>/g, '\<');
-    validText = validText.replace(/[/]/g, '\/');
-    // validText = validText.replace(/[\\]/g, //);
-    // validText = validText.replace(/["]/g, 'quote');
-    validText = validText.replace(/[(]/g, 'openparen');
-    validText = validText.replace(/[)]/g, 'closeparen');
-
-
-
-  } else {
-    validText = 'undefined';
-  }
+  if (!validText) { validText = 'undefined'; }
   if (validText[0] === '"') { validText = validText.substring(1, validText.length - 1); }
   //console.log(message.createdAt, validText);
 
-  console.log('outgoing: ', validText);
+  //console.log('outgoing: ', validText);
 
-  $('#chats').append('<div type="text">' + validText + '</div>');
+  $('#chats').append('<div type="text"></div>');
+  $('#chats').children().last().text(validText);
 };
 
 app.renderRoom = function(room) {
