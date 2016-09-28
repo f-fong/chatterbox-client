@@ -40,7 +40,6 @@ app.fetch = function(request) {
     data: { order: '-createdAt', limit: 100 },
     contentType: 'application/json',
     success: function (data) {
-      console.log(data);
       app['data'] = data;
 
       console.log('chatterbox: Message retrieved');
@@ -76,9 +75,9 @@ app.renderMessage = function(message) {
   var $msg = $('#chats').children().last();
   $msg.data('room', room);
 
-  $msg.on('click', function() {
-    console.log(this.constructor);
-  });
+  // $msg.on('click', function() {
+  //   console.log(this.constructor);
+  // });
     
 
 };
@@ -95,9 +94,19 @@ app.renderMessage = function(message) {
 
 
 app.renderRoom = function(room) {
-  // console.log(room);
-  debugger;
-  $('#roomSelect').html('<div>' + room + '</div>');
+  console.log(room);
+  // console.log(app.data);
+
+  var filteredMessages = app.data.results.filter(function(element) {
+    return (element.roomname === room);
+  });
+  console.log(filteredMessages);
+  app.clearMessages();
+
+  filteredMessages.forEach(app.renderMessage);
+
+
+  //$('#roomSelect').html('<div>' + room + '</div>');
 };
 
 app.fetch();
@@ -123,9 +132,24 @@ var populate = function() {
 
   //console.log('here', app.rooms);
   for (var i in app.rooms) {
-    var $option = $('<option/>').val(i).text(i);
+    var $option = $('<option></option>');
+
+    $option.text(i);
+    $option.attr('value', i);
+   //     var $option = $('<option/>').val(i).text(i);
     $('select').append($option);
   }
+
+  $('#roomsmenu').on('change', function(event) {
+
+    var room = $(this).val();
+
+    app.renderRoom(room);
+
+
+  });
+
+
 
 };
 
@@ -150,6 +174,8 @@ $(document).ready(function() {
     waitAndPopulate();
   });
 });
+
+
 
 
 
