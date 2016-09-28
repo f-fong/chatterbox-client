@@ -1,6 +1,8 @@
 // YOUR CODE HERE:
 
-var app = {rooms: {}};
+
+
+var app = {rooms: {}, friends: {}};
 
 // 'rooms': {'lobby': true}
 
@@ -27,10 +29,6 @@ app.send = function(message) {
   });
 };
 
-// $.get( "ajax/test.html", function( data ) {
-//   $( ".result" ).html( data );
-//   alert( "Load was performed." );
-// });
 
 app.fetch = function(request) {
   $.ajax({
@@ -58,27 +56,24 @@ app.clearMessages = function() {
 
 
 app.renderMessage = function(message) {
-  //console.log('incoming: ', message);
+
   var validText = JSON.stringify(message.text);
   if (!validText) { validText = 'undefined'; }
   if (validText[0] === '"') { validText = validText.substring(1, validText.length - 1); }
-  //console.log(message.createdAt, validText);
 
-  //console.log('outgoing: ', validText);
-
-  //$( ".inner" ).prepend( "<p>Test</p>" );
 
   $('#chats').append('<div type="text"></div>');
   $('#chats').children().last().text('message: ' + validText);
   $('#chats').children().last().prepend('<span class="roomText">room: ' + message.roomname + '</span><br>');
   var room = message.roomname || 'undefined';
   var $msg = $('#chats').children().last();
+  var $username = $('<span style="float: right" class="userInDom"></span>');
+  $username.text(message.username);
+  $username.addClass(message.username);
+  $username.data('name', message.username);
+  $msg.append($username);
   $msg.data('room', room);
 
-  // $msg.on('click', function() {
-  //   console.log(this.constructor);
-  // });
-    
 
 };
 
@@ -86,16 +81,10 @@ app.renderMessage = function(message) {
 
 
 
-// var a = $('#mydiv').data('myval'); //getter
-
-// $('#mydiv').data('myval',20); //setter
-
-
-
-
 app.renderRoom = function(room) {
+
   console.log(room);
-  // console.log(app.data);
+
 
   var filteredMessages = app.data.results.filter(function(element) {
     return (element.roomname === room);
@@ -105,21 +94,30 @@ app.renderRoom = function(room) {
 
   filteredMessages.forEach(app.renderMessage);
 
+  $('.userInDom').on('click', function() {
+    var $friend = $(this).data('name');
+    //console.log('$friend', )
+    //console.log($(this).data('name'));
+    app.friends[$friend] = true;
+    $('.' + friend ).css('color', 'red');
+    $friend.css('color', 'blue');
+    var $els = $('.userInDom').find("[data-name='" + $friend + "']");
+    $els.css("color", "green");
 
-  //$('#roomSelect').html('<div>' + room + '</div>');
+// $( "#mydiv" ).css( "color", "green" )
+
+// $('ul').find(el+[data-slide=+current+]);
+// $('a[data-filter-value="' + attribu + '"]').css("background", "#ddd");
+  // $('*[data-customerID="22"]');
+
+// $("p").css("color", "red");
+
+  });
+
 };
 
 app.fetch();
 
-
-// 
-// <select name="cars">
-//   <option value="volvo">Volvo</option>
-//   <option value="saab">Saab</option>
-//  <option value="fiat">Fiat</option>
-// <option value="audi">Audi</option>
-// </select>
-// 
 
 
 var populate = function() {
@@ -130,13 +128,13 @@ var populate = function() {
     app.renderMessage(val);
   });
 
-  //console.log('here', app.rooms);
+
   for (var i in app.rooms) {
     var $option = $('<option></option>');
 
     $option.text(i);
     $option.attr('value', i);
-   //     var $option = $('<option/>').val(i).text(i);
+
     $('select').append($option);
   }
 
@@ -147,6 +145,10 @@ var populate = function() {
     app.renderRoom(room);
 
 
+  });
+
+  $('.userInDom').on('click', function() {
+    console.log($(this).data('name'));
   });
 
 
@@ -174,38 +176,3 @@ $(document).ready(function() {
     waitAndPopulate();
   });
 });
-
-
-
-
-
-// app.send({
-//   username: 'mickeymouse',
-//   text: 'helllloooo#######',
-//   roomname: 'default'
-// });
-
-
-
-
-//check();
-
-
-// app.data.results.forEach(function(val, key, col) {
-
-//   setTimeout(function() {
-//     app.renderMessage(val);
-//   }, 3000);
-
-// });
-
-
-
-// app.data.results.forEach(function(val, key, col) {
-//   app.renderMessage(app.data.results[key]);
-// });
-
-
-
-
-
