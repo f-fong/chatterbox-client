@@ -1,6 +1,8 @@
 // YOUR CODE HERE:
 
-var app = {'rooms': {'lobby': true}};
+var app = {rooms: {}};
+
+// 'rooms': {'lobby': true}
 
 //for each room add room to app.rooms
 
@@ -31,22 +33,21 @@ app.send = function(message) {
 // });
 
 app.fetch = function(request) {
-
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
-    url: 'https://api.parse.com/1/classes/messages?order=-createdAt',
+    url: 'https://api.parse.com/1/classes/messages',
     type: 'GET',
-    data: JSON.stringify(this.url),
+    data: { order: '-createdAt', limit: 100 },
     contentType: 'application/json',
     success: function (data) {
       console.log(data);
       app['data'] = data;
 
-      console.log('chatterbox: Message retreived');
+      console.log('chatterbox: Message retrieved');
     },
     error: function (data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-      console.error('chatterbox: Failed to retreive message', data);
+      console.error('chatterbox: Failed to retrieve message', data);
     }
   });
 
@@ -82,10 +83,6 @@ app.renderMessage = function(message) {
 
 };
 
-Object.prototype.displayRoom = function() {
-  console.log(this);
-};
-
 
 
 
@@ -106,11 +103,29 @@ app.renderRoom = function(room) {
 app.fetch();
 
 
+// 
+// <select name="cars">
+//   <option value="volvo">Volvo</option>
+//   <option value="saab">Saab</option>
+//  <option value="fiat">Fiat</option>
+// <option value="audi">Audi</option>
+// </select>
+// 
+
+
 var populate = function() {
+
+
   app.data.results.forEach(function(val, key, col) {
     app.rooms[val.roomname] = val.roomname;
     app.renderMessage(val);
   });
+
+  //console.log('here', app.rooms);
+  for (var i in app.rooms) {
+    var $option = $('<option/>').val(i).text(i);
+    $('select').append($option);
+  }
 
 };
 
